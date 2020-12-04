@@ -16,12 +16,19 @@ public class Lahendaja {
 
     public Lahendaja(String fail) throws FileNotFoundException {
         loeKaugusedFailist(fail);
-        System.out.println("nimed.length == " + nimed.length);
-        System.out.println("kaugused.length == " + kaugused.length);
-//        System.out.println("nimed:");
-//        System.out.println(String.join(" | ", nimed));
-//        System.out.println("linnaIndeksid:");
-//        System.out.println(linnaIndeksid);
+
+//        System.out.println("vnimed:");
+//        System.out.println(String.join(" | ", vnimed));
+//        System.out.println("vlinnaIndeksid:");
+//        System.out.println(vlinnaIndeksid);
+//        System.out.println("vkaugused");
+//        for (int[] i : vkaugused) {
+//            System.out.println();
+//            for (int e = 50; e < 59; e++) {
+//                System.out.print("|| " + i[e] + " ");
+//            }
+//            System.out.println("||");
+//        }
     }
 
     public Vastus FWLeiaLyhimTee(String algus, String lopp) {
@@ -67,8 +74,56 @@ public class Lahendaja {
         //kuid võite lisada ka Tipp ja Serv klassid ning failist lugemist
         //selleks sobivaks töödelda
 
-
+        // DIJKSTRA
+        List<String> tee = new ArrayList<>();
+        tee.add(algus);
+        List<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new ArrayList<>());
+        System.out.println(koikTeed);
         return new Vastus(Arrays.asList(algus,lõpp),-1);
+    }
+
+    /**
+     * Leiab rekursiivselt kõik võimalikud teed sihtkohta.
+     * @param tee - järjend linnanimedest, kus on juba peatus tehtud. Välja kutsumisel peaks alguspunkt ainuke element olema
+     * @param teepikkus - seni läbitud tee pikkus
+     * @param sihtkoht - linn, kuhu jõudes peaks töö lõppema
+     * @param max - maksimaalne vahemaa, mis peatumata sõita saab
+     * @param lahendid - leitud lahendid
+     * @return List<Vastus> kõik võimalikud teed sihtkohta
+     */
+    private List<Vastus> leiaKoikTeed(List<String> tee, int teepikkus, String sihtkoht, int max, List<Vastus> lahendid) {
+        String viimaneLinn = tee.get(tee.size()-1);
+        if (viimaneLinn.equals(sihtkoht)) {
+            lahendid.add(new Vastus(tee, teepikkus));
+            return lahendid;
+        }
+        List<String> jargmised = new ArrayList<>();
+        for (int i = 0; i < kaugused[indeks(viimaneLinn)].length; i++) {
+            if (kaugused[indeks(viimaneLinn)][i] != 0
+                    && kaugused[indeks(viimaneLinn)][i] <= max
+                    && poleKainud(nimed[i], tee)) {
+                jargmised.add(nimed[i]);
+            }
+        }
+        if (jargmised.size() == 0) { return lahendid; }
+        for (String jarg:jargmised) {
+            tee.add(jarg);
+            lahendid = leiaKoikTeed(tee, teepikkus + kaugused[indeks(viimaneLinn)][indeks(jarg)], sihtkoht, max, lahendid);
+            tee.remove(jarg);
+        }
+        return lahendid;
+    }
+
+    /**
+     * Abifunktsioon kontrollimaks kas mingis linnas on juba käidud.
+     * @param linn - linn, mille sisaldumist argumendis 'tee' kontrollime
+     * @return true - kui linn ei sisaldu tees, muidu false
+     */
+    public boolean poleKainud(String linn, List<String> tee) {
+        for ( String l : tee ) {
+            if (l.equals(linn)) { return false; }
+        }
+        return true;
     }
 
     /*
@@ -100,15 +155,15 @@ public class Lahendaja {
                 i++;
                 in = br.readLine();
             }
-            //// DELETE ////
-            vnimed = new String[9];
-            vkaugused = new int[9][];
-            vlinnaIndeksid = new HashMap<>();
-            for (int j = 0; j < 10; j++) {
-                vnimed[j] = nimed[50+j];
-                vkaugused[j] = kaugused[50+j];
-                vlinnaIndeksid.put(nimed[50+j], 50+j);
-            }
+//            //// DELETE ////
+//            vnimed = new String[9];
+//            vkaugused = new int[9][];
+//            vlinnaIndeksid = new HashMap<>();
+//            for (int j = 0; j < 9; j++) {
+//                vnimed[j] = nimed[50+j];
+//                vkaugused[j] = kaugused[50+j];
+//                vlinnaIndeksid.put(nimed[50+j], 50+j);
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();

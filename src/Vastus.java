@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Vastus {
+public class Vastus implements Comparable<Vastus> {
 
     public List<String> tee;
     public int teepikkus;
@@ -19,5 +19,10 @@ public class Vastus {
             return ("Linnade " + tee.get(0) + " ja " + tee.get(tee.size() - 1)
                     + " vahel sobivat teed ei leidunud.");
         }
+    }
+
+    @Override
+    public int compareTo(Vastus o) {
+        return this.teepikkus - o.teepikkus;
     }
 }

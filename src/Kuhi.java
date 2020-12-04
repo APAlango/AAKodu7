@@ -11,27 +11,11 @@ public class Kuhi<T extends Comparable<T>> {
         this.massiiv = massiiv;
     }
 
-    /*
-    Ülesanne 1:
-    Koostada funktsioonid, mis võtavad argumentideks kuhja ja indeksi k ja tagastavad k-nda elemendi
-    * vasaku alluva indeksi
-    * parema alluva indeksi
-    * vanema indeksi
-    Kuna me implementeerime seda isendimeetodina, siis võime kuhja argumendi jätta kaasamata.
-     */
-
     private int vasak(int k){ return 2*k+1; }
 
     private int parem(int k){ return 2*k+2; }
 
     private int vanem(int k){ return k > 0 ? (int) Math.floor((k-1)/2.0) : -1; }
-
-    /*
-    Ülesanne 2:
-    Koostada funktsioonid
-    1) Kuhja elemendi mullina ülesviimiseks
-    2) Kuhja elemendi mullina allaviimiseks
-     */
 
     /**
      * Mullitab elemendi indeksil i ülespoole
@@ -132,10 +116,6 @@ public class Kuhi<T extends Comparable<T>> {
         }
     }
 
-    /*
-    Ülesanne 5:
-    Realiseerida kuhjameetodil sorteerimine
-     */
     public static <T extends Comparable<T>> ArrayList<T> sorteeri(ArrayList<T> sisend){
         Kuhi<T> temp = new Kuhi<>(sisend);
         temp.kuhjasta();
@@ -146,9 +126,9 @@ public class Kuhi<T extends Comparable<T>> {
     public String toString() {
         String sisu = "";
         for (T e:massiiv) {
-            sisu += "| " + e.toString() + " ";
+            sisu += "|| " + e.toString() + " ";
         }
-        sisu += "|";
+        sisu += "||";
         String lagi = "=".repeat(sisu.length());
         return lagi + "\n" + sisu + "\n" + lagi;
     }
