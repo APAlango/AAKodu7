@@ -5,18 +5,48 @@ public class Lahendaja {
 
     //Linnadevahelised kaugused
     public int[][] kaugused;
+    public int[][] vkaugused;
 
     //Sisaldab linnade nimesid
     //Saab kasutada nii rea kui tulba nime leidmiseks
     public String [] nimed;
+    public String[] vnimed;
     public HashMap<String,Integer> linnaIndeksid;
+    public HashMap<String,Integer> vlinnaIndeksid;
 
     public Lahendaja(String fail) throws FileNotFoundException {
         loeKaugusedFailist(fail);
-        System.out.println("nimed:");
-        System.out.println(String.join(" | ", nimed));
-        System.out.println("linnaIndeksid:");
-        System.out.println(linnaIndeksid);
+        System.out.println("nimed.length == " + nimed.length);
+        System.out.println("kaugused.length == " + kaugused.length);
+//        System.out.println("nimed:");
+//        System.out.println(String.join(" | ", nimed));
+//        System.out.println("linnaIndeksid:");
+//        System.out.println(linnaIndeksid);
+    }
+
+    public Vastus FWLeiaLyhimTee(String algus, String lopp) {
+        List<String> tee = new ArrayList<>();
+        int kaugus = -1;
+        tee.add(algus);
+        int algusIndeks = indeks(algus);
+        int loppIndeks = indeks(lopp);
+        // Vaatame labi koik tipud ja iga tipu kohta kontrollime eraldi
+        for (int i = 0; i < kaugused.length; i++) {
+            for (int x = 0; x < kaugused.length; x++) {
+                if (x != i && x == algusIndeks) {
+                    for (int y = 0; y < kaugused.length; y++) {
+                        if (y != i && y == loppIndeks) {
+                            int alt = kaugused[x][i] + kaugused[i][y];
+                            if (alt < kaugused[x][y]) {
+                                tee.add(nimed[i]);
+                                kaugus = kaugused[algusIndeks][i] + kaugused[i][loppIndeks];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new Vastus(tee, kaugus);
     }
 
     /**
@@ -42,7 +72,7 @@ public class Lahendaja {
     }
 
     /*
-    Mugavusmeetod, mis võtab linna nime ning tagastab temale vastava indeksid massiivides "kaugused" ja "nimed".
+    Mugavusmeetod, mis võtab linna nime ning tagastab temale vastavad indeksid massiivides "kaugused" ja "nimed".
      */
     public int indeks(String linn){
         return linnaIndeksid.get(linn);
@@ -70,6 +100,16 @@ public class Lahendaja {
                 i++;
                 in = br.readLine();
             }
+            //// DELETE ////
+            vnimed = new String[9];
+            vkaugused = new int[9][];
+            vlinnaIndeksid = new HashMap<>();
+            for (int j = 0; j < 10; j++) {
+                vnimed[j] = nimed[50+j];
+                vkaugused[j] = kaugused[50+j];
+                vlinnaIndeksid.put(nimed[50+j], 50+j);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

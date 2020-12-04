@@ -11,7 +11,7 @@ public class Vastus {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
 
         if(teepikkus != -1) {
             return teepikkus+", "+String.join(" > ",tee);
