@@ -77,12 +77,12 @@ public class Lahendaja {
         // DIJKSTRA
         List<String> tee = new ArrayList<>();
         tee.add(algus);
-        List<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new ArrayList<>());
-        System.out.println("Kõik leitud teed:");
-        for (Vastus leitudTee:koikTeed) {
-            System.out.println(leitudTee);
-        }
-        return new Vastus(Arrays.asList(algus,lõpp),-1);
+        Kuhi<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new Kuhi<>());
+//        System.out.println("Kõik leitud teed:");
+//        for (Vastus leitudTee:koikTeed.massiiv) {
+//            System.out.println(leitudTee);
+//        }
+        return koikTeed.votaJuur();
     }
 
     /**
@@ -94,18 +94,18 @@ public class Lahendaja {
      * @param lahendid - leitud lahendid
      * @return List<Vastus> kõik võimalikud teed sihtkohta
      */
-    private List<Vastus> leiaKoikTeed(List<String> tee, int teepikkus, String sihtkoht, int max, List<Vastus> lahendid) {
+    private Kuhi<Vastus> leiaKoikTeed(List<String> tee, int teepikkus, String sihtkoht, int max, Kuhi<Vastus> lahendid) {
         String viimaneLinn = tee.get(tee.size()-1);
         if (viimaneLinn.equals(sihtkoht)) {
-            lahendid.add(new Vastus(tee, teepikkus));
+            lahendid.lisaKirje(new Vastus(tee, teepikkus));
             return lahendid;
         }
         Kuhi<Naaberlinn> jargmised = new Kuhi<>();
-        for (int i = 0; i < vkaugused[vindeks(viimaneLinn)].length; i++) {
-            if (vkaugused[vindeks(viimaneLinn)][i] != 0
-                    && vkaugused[vindeks(viimaneLinn)][i] <= max
-                    && poleKainud(vnimed[i], tee)) {
-                jargmised.lisaKirje(new Naaberlinn(vnimed[i], vkaugused[vindeks(viimaneLinn)][i]));
+        for (int i = 0; i < kaugused[indeks(viimaneLinn)].length; i++) {
+            if (kaugused[indeks(viimaneLinn)][i] != 0
+                    && kaugused[indeks(viimaneLinn)][i] <= max
+                    && poleKainud(nimed[i], tee)) {
+                jargmised.lisaKirje(new Naaberlinn(nimed[i], kaugused[indeks(viimaneLinn)][i]));
             }
         }
         if (jargmised.massiiv.isEmpty()) { return lahendid; }

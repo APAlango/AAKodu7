@@ -12,7 +12,7 @@ public class Main {
         try {
             lahendaja = new Lahendaja("linnade_kaugused.txt");
             if (lahendaja.linnaIndeksid.containsKey(algus) && lahendaja.linnaIndeksid.containsKey(lopp)) {
-                Vastus vastus1 = /*lahendaja.FWLeiaLyhimTee(algus, lopp);*/lahendaja.leiaLühimTee(algus, lopp, 100);
+                Vastus vastus1 = /*lahendaja.FWLeiaLyhimTee(algus, lopp);*/lahendaja.leiaLühimTee(algus, lopp, 60);
                 System.out.println(vastus1);
             }
             else {
