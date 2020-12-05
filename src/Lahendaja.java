@@ -78,7 +78,10 @@ public class Lahendaja {
         List<String> tee = new ArrayList<>();
         tee.add(algus);
         List<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new ArrayList<>());
-        System.out.println(koikTeed);
+        System.out.println("Kõik leitud teed:");
+        for (Vastus leitudTee:koikTeed) {
+            System.out.println(leitudTee);
+        }
         return new Vastus(Arrays.asList(algus,lõpp),-1);
     }
 
@@ -97,19 +100,20 @@ public class Lahendaja {
             lahendid.add(new Vastus(tee, teepikkus));
             return lahendid;
         }
-        List<String> jargmised = new ArrayList<>();
-        for (int i = 0; i < kaugused[indeks(viimaneLinn)].length; i++) {
-            if (kaugused[indeks(viimaneLinn)][i] != 0
-                    && kaugused[indeks(viimaneLinn)][i] <= max
-                    && poleKainud(nimed[i], tee)) {
-                jargmised.add(nimed[i]);
+        Kuhi<Naaberlinn> jargmised = new Kuhi<>();
+        for (int i = 0; i < vkaugused[vindeks(viimaneLinn)].length; i++) {
+            if (vkaugused[vindeks(viimaneLinn)][i] != 0
+                    && vkaugused[vindeks(viimaneLinn)][i] <= max
+                    && poleKainud(vnimed[i], tee)) {
+                jargmised.lisaKirje(new Naaberlinn(vnimed[i], vkaugused[vindeks(viimaneLinn)][i]));
             }
         }
-        if (jargmised.size() == 0) { return lahendid; }
-        for (String jarg:jargmised) {
-            tee.add(jarg);
-            lahendid = leiaKoikTeed(tee, teepikkus + kaugused[indeks(viimaneLinn)][indeks(jarg)], sihtkoht, max, lahendid);
-            tee.remove(jarg);
+        if (jargmised.massiiv.isEmpty()) { return lahendid; }
+        while (!jargmised.massiiv.isEmpty()) {
+            Naaberlinn lahimNaaber = jargmised.votaJuur();
+            tee.add(lahimNaaber.nimi);
+            lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
+            tee.remove(lahimNaaber.nimi);
         }
         return lahendid;
     }
@@ -131,6 +135,13 @@ public class Lahendaja {
      */
     public int indeks(String linn){
         return linnaIndeksid.get(linn);
+    }
+
+    /*
+    Mugavusmeetod, mis võtab linna nime ning tagastab temale vastavad indeksid massiivides "kaugused" ja "nimed".
+     */
+    public int vindeks(String linn){
+        return vlinnaIndeksid.get(linn);
     }
 
     private void loeKaugusedFailist(String fail) throws FileNotFoundException {
@@ -155,15 +166,15 @@ public class Lahendaja {
                 i++;
                 in = br.readLine();
             }
-//            //// DELETE ////
-//            vnimed = new String[9];
-//            vkaugused = new int[9][];
-//            vlinnaIndeksid = new HashMap<>();
-//            for (int j = 0; j < 9; j++) {
-//                vnimed[j] = nimed[50+j];
-//                vkaugused[j] = kaugused[50+j];
-//                vlinnaIndeksid.put(nimed[50+j], 50+j);
-//            }
+            //// DELETE ////
+            vnimed = new String[9];
+            vkaugused = new int[9][];
+            vlinnaIndeksid = new HashMap<>();
+            for (int j = 0; j < 9; j++) {
+                vnimed[j] = nimed[50+j];
+                vkaugused[j] = new int[]{kaugused[50+j][50], kaugused[50+j][51], kaugused[50+j][52], kaugused[50+j][53],kaugused[50+j][54],kaugused[50+j][55],kaugused[50+j][56],kaugused[50+j][57],kaugused[50+j][58]};
+                vlinnaIndeksid.put(nimed[50+j], j);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
