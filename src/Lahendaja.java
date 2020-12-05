@@ -78,10 +78,10 @@ public class Lahendaja {
         List<String> tee = new ArrayList<>();
         tee.add(algus);
         Kuhi<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new Kuhi<>());
-//        System.out.println("Kõik leitud teed:");
-//        for (Vastus leitudTee:koikTeed.massiiv) {
-//            System.out.println(leitudTee);
-//        }
+        for (Vastus v:koikTeed.massiiv
+             ) {
+            System.out.println(v);
+        }
         return koikTeed.votaJuur();
     }
 
@@ -97,23 +97,36 @@ public class Lahendaja {
     private Kuhi<Vastus> leiaKoikTeed(List<String> tee, int teepikkus, String sihtkoht, int max, Kuhi<Vastus> lahendid) {
         String viimaneLinn = tee.get(tee.size()-1);
         if (viimaneLinn.equals(sihtkoht)) {
-            lahendid.lisaKirje(new Vastus(tee, teepikkus));
+            Vastus leitud = new Vastus(tee, teepikkus);
+            lahendid.lisaKirje(leitud);
+//            System.out.println("LAHEND: " + teepikkus + " " + String.join(" > ", tee));
             return lahendid;
         }
+        // Siia lisame vaid linnad, mis on sihtkohale lahemal kui linn, kus praegu oleme.
         Kuhi<Naaberlinn> jargmised = new Kuhi<>();
         for (int i = 0; i < kaugused[indeks(viimaneLinn)].length; i++) {
             if (kaugused[indeks(viimaneLinn)][i] != 0
                     && kaugused[indeks(viimaneLinn)][i] <= max
-                    && poleKainud(nimed[i], tee)) {
+                    && poleKainud(nimed[i], tee)
+                    && kaugused[i][indeks(sihtkoht)] < kaugused[indeks(viimaneLinn)][indeks(sihtkoht)]) {
                 jargmised.lisaKirje(new Naaberlinn(nimed[i], kaugused[indeks(viimaneLinn)][i]));
             }
         }
         if (jargmised.massiiv.isEmpty()) { return lahendid; }
         while (!jargmised.massiiv.isEmpty()) {
             Naaberlinn lahimNaaber = jargmised.votaJuur();
-            tee.add(lahimNaaber.nimi);
-            lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
-            tee.remove(lahimNaaber.nimi);
+            if (!lahendid.massiiv.isEmpty()) {
+                if (teepikkus + lahimNaaber.kaugus < lahendid.massiiv.get(0).teepikkus) {
+                    tee.add(lahimNaaber.nimi);
+                    lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
+                    tee.remove(lahimNaaber.nimi);
+                }
+            }
+            else {
+                tee.add(lahimNaaber.nimi);
+                lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
+                tee.remove(lahimNaaber.nimi);
+            }
         }
         return lahendid;
     }

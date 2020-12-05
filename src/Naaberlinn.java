@@ -11,4 +11,12 @@ public class Naaberlinn implements Comparable<Naaberlinn> {
     public int compareTo(Naaberlinn teineLinn) {
         return this.kaugus - teineLinn.kaugus;
     }
+
+    @Override
+    public String toString() {
+        return "Naaberlinn{" +
+                "nimi='" + nimi + '\'' +
+                ", kaugus=" + kaugus +
+                '}';
+    }
 }
