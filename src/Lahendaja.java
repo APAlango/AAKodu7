@@ -16,19 +16,6 @@ public class Lahendaja {
 
     public Lahendaja(String fail) throws FileNotFoundException {
         loeKaugusedFailist(fail);
-
-//        System.out.println("vnimed:");
-//        System.out.println(String.join(" | ", vnimed));
-//        System.out.println("vlinnaIndeksid:");
-//        System.out.println(vlinnaIndeksid);
-//        System.out.println("vkaugused");
-//        for (int[] i : vkaugused) {
-//            System.out.println();
-//            for (int e = 50; e < 59; e++) {
-//                System.out.print("|| " + i[e] + " ");
-//            }
-//            System.out.println("||");
-//        }
     }
 
     public Vastus FWLeiaLyhimTee(String algus, String lopp) {
@@ -75,13 +62,7 @@ public class Lahendaja {
         //selleks sobivaks töödelda
 
         // DIJKSTRA
-        List<String> tee = new ArrayList<>();
-        tee.add(algus);
-        Kuhi<Vastus> koikTeed = leiaKoikTeed(tee, 0, lõpp, max, new Kuhi<>());
-        for (Vastus v:koikTeed.massiiv
-             ) {
-            System.out.println(v);
-        }
+        Kuhi<Vastus> koikTeed = leiaKoikTeed(algus, 0, lõpp, max, new Kuhi<>());
         return koikTeed.votaJuur();
     }
 
@@ -94,12 +75,12 @@ public class Lahendaja {
      * @param lahendid - leitud lahendid
      * @return List<Vastus> kõik võimalikud teed sihtkohta
      */
-    private Kuhi<Vastus> leiaKoikTeed(List<String> tee, int teepikkus, String sihtkoht, int max, Kuhi<Vastus> lahendid) {
-        String viimaneLinn = tee.get(tee.size()-1);
+    private Kuhi<Vastus> leiaKoikTeed(String tee, int teepikkus, String sihtkoht, int max, Kuhi<Vastus> lahendid) {
+        String[] teeJarj = tee.split(" ");
+        String viimaneLinn = teeJarj[teeJarj.length-1];
         if (viimaneLinn.equals(sihtkoht)) {
-            Vastus leitud = new Vastus(tee, teepikkus);
+            Vastus leitud = new Vastus(Arrays.asList(teeJarj), teepikkus);
             lahendid.lisaKirje(leitud);
-//            System.out.println("LAHEND: " + teepikkus + " " + String.join(" > ", tee));
             return lahendid;
         }
         // Siia lisame vaid linnad, mis on sihtkohale lahemal kui linn, kus praegu oleme.
@@ -117,15 +98,11 @@ public class Lahendaja {
             Naaberlinn lahimNaaber = jargmised.votaJuur();
             if (!lahendid.massiiv.isEmpty()) {
                 if (teepikkus + lahimNaaber.kaugus < lahendid.massiiv.get(0).teepikkus) {
-                    tee.add(lahimNaaber.nimi);
-                    lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
-                    tee.remove(lahimNaaber.nimi);
+                    lahendid = leiaKoikTeed(tee + " " + lahimNaaber.nimi, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
                 }
             }
             else {
-                tee.add(lahimNaaber.nimi);
-                lahendid = leiaKoikTeed(tee, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
-                tee.remove(lahimNaaber.nimi);
+                lahendid = leiaKoikTeed(tee + " " + lahimNaaber.nimi, teepikkus + lahimNaaber.kaugus, sihtkoht, max, lahendid);
             }
         }
         return lahendid;
@@ -136,8 +113,8 @@ public class Lahendaja {
      * @param linn - linn, mille sisaldumist argumendis 'tee' kontrollime
      * @return true - kui linn ei sisaldu tees, muidu false
      */
-    public boolean poleKainud(String linn, List<String> tee) {
-        for ( String l : tee ) {
+    public boolean poleKainud(String linn, String tee) {
+        for ( String l : tee.split(" ") ) {
             if (l.equals(linn)) { return false; }
         }
         return true;

@@ -6,7 +6,6 @@ public class Vastus implements Comparable<Vastus> {
     public int teepikkus;
 
     public Vastus(List<String> tee,int teepikkus) {
-        System.out.println(tee.size());
         this.tee = tee;
         this.teepikkus = teepikkus;
     }
@@ -15,7 +14,7 @@ public class Vastus implements Comparable<Vastus> {
 //        StringBuilder sb = new StringBuilder();
 
         if(teepikkus != -1) {
-            return teepikkus+", "+String.join(" > ",tee) + ", linnu = " + tee.size();
+            return teepikkus+", "+String.join(" > ",tee);
         } else {
             return ("Linnade " + tee.get(0) + " ja " + tee.get(tee.size() - 1)
                     + " vahel sobivat teed ei leidunud.");

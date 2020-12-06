@@ -63,13 +63,6 @@ public class Kuhi<T extends Comparable<T>> {
         mullitaAlla(alluvaIndeks);
     }
 
-    /*
-    Ülesanne 3:
-    Koostada funktsioonid
-    1. Etteantud väärtusega elemendi lisamiseks
-    2. Väikseima väärtusega elemendi (juurtipu) eemaldamiseks
-     */
-
     /**
      * Lisab massiivi lõppu kirje ja mullitab seda üles kuni kuhja tingimus hakkab kehtima.
      * @param kirje - loome selle kirjega T ja lisame selle massiivi.
@@ -95,31 +88,6 @@ public class Kuhi<T extends Comparable<T>> {
             mullitaAlla(0);
         }
         return eemaldatud;
-    }
-
-    /*
-    Ülesanne 4:
-    Realiseerida meetod järjendi kuhjastamiseks
-     */
-
-    /**
-     * Kuhjastab isendivälja 'massiiv' sisu MIN-heap'iks
-     */
-    public void kuhjasta(){
-        ArrayList<T> kuhjastamata = new ArrayList<>();
-        for (int i = massiiv.size()-1; i >= 0 ; i--) {
-            kuhjastamata.add(massiiv.get(i));
-            massiiv.remove(i);
-        }
-        for (T el:kuhjastamata) {
-            this.lisaKirje(el);
-        }
-    }
-
-    public static <T extends Comparable<T>> ArrayList<T> sorteeri(ArrayList<T> sisend){
-        Kuhi<T> temp = new Kuhi<>(sisend);
-        temp.kuhjasta();
-        return temp.massiiv;
     }
 
     @Override
